@@ -3,11 +3,23 @@
     display: block;
   }
 }
+
+html {
+  min-width: 320px;
+  overflow: auto;
+}
+
 body {
   background-image: url(/assets/images/bg/init_bg.png);
+  max-width:3840px;
+  max-height: 2160px;
+  min-width: 320px;
   background-repeat: no-repeat;
-  background-size: 100% auto;
-  background-position: 0, -10%, 10%, 0;
+  background-position: center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
 *::-webkit-scrollbar {
@@ -25,41 +37,23 @@ body {
   border-radius: 20px; /* roundness of the scroll thumb */
 }
 
-.list-group-item {
-  padding: 5 !important;
-}
-.contentArea {
-  flex-grow: 1;
-}
-.wrapper {
-  max-width: 1300px;
-  margin: 0 auto;
-}
-.card {
-  box-shadow: $card-box-shadow;
-  margin-bottom: 30px;
+.h-full {
+  height: 100vh;
 }
 
-.circle-box {
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
-  text-align: center;
-  border-radius: 100%;
-  &.lg-box {
-    width: 60px;
-    height: 60px;
-    font-size: 21px;
-    line-height: 60px;
-  }
-}
-.button-group .btn {
-  margin: 3px;
+.w-full {
+  width: 100vh;
 }
 
-.table > :not(:first-child) {
-  border-top: 2px solid;
+.min-w-sm {
+  min-width: 300px;
 }
-.table-borderless > :not(:first-child) {
-  border-top-width: 0;
+
+.card-title {
+  margin-bottom: 10px;
+}
+
+.bottom-sticky {
+  position: sticky;
+  bottom: 5px;
 }

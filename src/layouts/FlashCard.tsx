@@ -1,10 +1,9 @@
-import { Button } from "reactstrap";
-import { useState, useEffect } from "react";
+import * as React from "react";
 import { useSearchParams } from "react-router-dom";
 const questions = require("../apis/questionQuery").questions;
 
 import { socket } from "../socket";
-import UserLists from "../components/UserLists";
+import UserLists from "../components/UsersCard";
 import QuestionCard from "../components/QuestionCard";
 import ResultCard from "../components/ResultCard";
 import Countdown from "react-countdown";
@@ -12,27 +11,29 @@ import { extractParams } from "../uritls";
 import { ParamsType } from "../types";
 import JoinButton from "../components/JoinButton";
 import SplashCard from "../components/SplashCard";
+import * as Antd from 'antd';
+import './FlashCard.scss';
 
-const FlashCard = () => {
+const FlashCard: React.FC = () => {
+  
   const [searchParams, setSearchParams] = useSearchParams();
   const params = extractParams(searchParams);
 
-  const [questionIndex, setQuestionIndex] = useState(0);
-  const [showResult, setShowResult] = useState(false);
-  const [correct, setCorrect] = useState<{
+  const [questionIndex, setQuestionIndex] = React.useState(0);
+  const [showResult, setShowResult] = React.useState(false);
+  const [correct, setCorrect] = React.useState<{
     index: number | null;
     status: string;
   }>({ index: null, status: "" });
+  const [joinedState, setJoinedState] = React.useState(false);
+  const [user, setUser] = React.useState<ParamsType | null>(null);
+  const [joinedUsers, setJoinedUsers] = React.useState(null);
+  const [waitingUsers, setWaitingUsers] = React.useState(null);
+  const [winner, setWinner] = React.useState<ParamsType | null>(null);
+  const [gameStarted, setGameState] = React.useState(false);
+  const [isCountdownShow, countdownShow] = React.useState(false);
 
-  const [joinedState, setJoinedState] = useState(false);
-  const [user, setUser] = useState<ParamsType | null>(null);
-  const [joinedUsers, setJoinedUsers] = useState(null);
-  const [waitingUsers, setWaitingUsers] = useState(null);
-  const [winner, setWinner] = useState<ParamsType | null>(null);
-  const [gameStarted, setGameState] = useState(false);
-  const [isCountdownShow, countdownShow] = useState(false);
-
-  useEffect(() => {
+  React.useEffect(() => {
     socket.on("users_state_refreshed", (users) => {
       if (users) {
         setJoinedUsers(users.filter((user) => user.joined));
@@ -132,14 +133,10 @@ const FlashCard = () => {
     return (
       <>
         {completed && (
-          <div style={{ ...styles.countdownCardStyle, textAlign: "center" }}>
-            <div style={styles.countdownTextStyle}>Let&apos;s go!</div>
-          </div>
+          <div>Let&apos;s go!</div>
         )}
         {!completed && (
-          <div style={{ ...styles.countdownCardStyle, textAlign: "center" }}>
-            <div style={styles.countdownTextStyle}>{seconds}</div>
-          </div>
+          <div>{seconds}</div>
         )}
       </>
     );
@@ -157,9 +154,20 @@ const FlashCard = () => {
 
   const question = questions[questionIndex];
   return (
-    <div className="p-4" style={{ width: "100vw", height: "100vh" }}>
-      <div style={styles.flashCardContainerStyle}>
-        <div style={styles.cardStyle}>
+    <Antd.Flex
+      vertical
+      className="h-full"
+      >
+      <Antd.Flex
+        justify="space-evenly"
+        align="center"
+        wrap="wrap"
+        className="h-full"
+        >
+        <Antd.Col
+          span={6}
+          className="min-w-sm"
+          >
           <UserLists
             joinedUsers={joinedUsers}
             waitingUsers={waitingUsers}
@@ -167,9 +175,11 @@ const FlashCard = () => {
             gameStarted={gameStarted}
             joinedState={joinedState}
           />
-        </div>
-
-        <div style={styles.cardStyle}>
+        </Antd.Col>
+        <Antd.Col
+          span={8}
+          className="min-w-sm"
+          >
           <SplashCard gameStarted={gameStarted} />
           {gameStarted && isCountdownShow && (
             <Countdown
@@ -195,49 +205,17 @@ const FlashCard = () => {
               hidden={!joinedState || !showResult}
             />
           )}
-        </div>
-      </div>
-      <JoinButton
-        joinedState={joinedState}
-        handleLeaveGame={handleLeaveGame}
-        handleJoinGame={handleJoinGame}
-      />
-    </div>
+        </Antd.Col>
+      </Antd.Flex>
+      <Antd.Divider plain className="bottom-sticky">
+        <JoinButton
+          joinedState={joinedState}
+          handleLeaveGame={handleLeaveGame}
+          handleJoinGame={handleJoinGame}
+        />
+      </Antd.Divider>
+    </Antd.Flex>
   );
-};
-
-const styles = {
-  flashCardContainerStyle: {
-    display: "flex",
-    padding: 20,
-    height: "90%",
-  },
-  countdownCardStyle: {
-    padding: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
-    backdropFilter: "blur(10px)",
-    borderRadius: 20,
-    minWidth: 350,
-    maxWidth: 550,
-    height: 500,
-    marginTop: "auto",
-    marginBottom: "auto",
-    marginLeft: 50,
-    display: "flex",
-  },
-  countdownTextStyle: {
-    color: "white",
-    fontSize: "7em",
-    fontWeight: "bold",
-    fontFamily: "Nunito",
-    textShadow: "5px 5px 10px black",
-    margin: "auto",
-  },
-  cardStyle: {
-    flex: 1,
-    padding: 20,
-    margin: "auto",
-  },
 };
 
 export default FlashCard;

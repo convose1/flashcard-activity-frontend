@@ -1,0 +1,11 @@
+.start-game-btn {
+    width: 175px;
+    margin-top: 10px;
+}
+
+.users-card {
+    &.ant-card .ant-card-head-title {
+        text-align: center;
+        font-size: x-large;
+    }
+}

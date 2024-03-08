@@ -1,6 +1,8 @@
-import { Card, CardBody, CardTitle, Badge } from "reactstrap";
+import { CardBody, CardTitle } from "reactstrap";
 import PropTypes from "prop-types";
-import { ParamsType } from "../types";
+import { ParamsType } from "../../types";
+import * as Antd from 'antd';
+import './style.scss'
 
 const ResultCard = ({
   winner,
@@ -12,7 +14,7 @@ const ResultCard = ({
   isYou: boolean;
 }) => {
   return (
-    <Card hidden={hidden} style={styles.resultCardStyle}>
+    <Antd.Card hidden={hidden}>
       <CardTitle
         tag="h2"
         className="text-center p-3 mb-0"
@@ -29,22 +31,8 @@ const ResultCard = ({
           height="100"
         />
       </CardBody>
-    </Card>
+    </Antd.Card>
   );
-};
-
-const styles = {
-  resultCardStyle: {
-    padding: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
-    backdropFilter: "blur(10px)",
-    borderRadius: 20,
-    minWidth: 400,
-    maxWidth: 550,
-    marginTop: "auto",
-    marginBottom: "auto",
-    marginLeft: 50,
-  },
 };
 
 ResultCard.propTypes = {
